@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import "./sign-in.styles.scss"
 import { FormInput } from "../form-input/form-input.component"
 import { CustomButton } from "../custom-button/custom-button.component"
-import { signInWithGoogle } from "../../firebase/firebase.utils"
+import { auth, signInWithGoogle } from "../../firebase/firebase.utils"
+import { NotificationContainer } from 'react-notifications';
+import createNotification from "../../notification-messages/notifications.-messages"
+
 class SignIn extends Component {
   constructor(props) {
     super(props);
@@ -12,8 +15,16 @@ class SignIn extends Component {
     }
   }
 
-  handleSubmit = (e) => {
+
+  handleSubmit = async (e) => {
     e.preventDefault()
+    const { email, password } = this.state
+    try {
+      await auth.signInWithEmailAndPassword(email, password)
+      createNotification('success', "You have Succsesfully Logged In!")
+    } catch (error) {
+      createNotification('error', " ", error)
+    }
 
     this.setState({ email: "", password: "" })
   }
@@ -47,6 +58,7 @@ class SignIn extends Component {
             <CustomButton onClick={signInWithGoogle} isGoogleSignIn> Sign in With Google </CustomButton >
           </div>
         </form>
+        <NotificationContainer />
       </div>
     )
   }
