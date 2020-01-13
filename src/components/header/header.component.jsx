@@ -5,7 +5,6 @@ import { ReactComponent as Logo } from "../../assets/Brain-Light-Bulb.svg"
 import { auth } from "../../firebase/firebase.utils"
 
 export const Header = ({ currentUser }) => {
-  console.log(currentUser)
   return (
     <div className="header">
       <Link className="logo-container" to="/">
