@@ -3,10 +3,12 @@ import "./sign-up.styles.scss"
 import { FormInput } from "../form-input/form-input.component"
 import { CustomButton } from "../custom-button/custom-button.component"
 import { auth, createUserProfileDocument } from "../../firebase/firebase.utils"
+import { NotificationContainer } from 'react-notifications';
+import createNotification from "../../notification-messages/notifications.-messages"
 
 class SignUp extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       displayName: "",
       email: "",
@@ -14,27 +16,32 @@ class SignUp extends Component {
       confirmPassword: ""
     }
   }
-
+  clearFields = () => {
+    this.setState({
+      displayName: "",
+      email: "",
+      password: "",
+      confirmPassword: ""
+    })
+  }
   handleSubmit = async (e) => {
     e.preventDefault()
     const { displayName, email, password, confirmPassword } = this.state
 
     if (password !== confirmPassword) {
-      alert("password do not match try again")
+      createNotification('warning', " Passwords do not match please try again! ")
+      this.clearFields()
       return
     }
     try {
       const { user } = await auth.createUserWithEmailAndPassword(email, password)
       await createUserProfileDocument(user, { displayName })
-      this.setState({
-        displayName: "",
-        email: "",
-        password: "",
-        confirmPassword: ""
-      })
+      this.clearFields()
+      createNotification('success', "You have Succsesfully Signed UP!")
     } catch (error) {
-      alert(error.message)
+      createNotification('error', " ", error)
     }
+    this.clearFields()
   }
 
   handleChange = (e) => {
@@ -84,6 +91,7 @@ class SignUp extends Component {
             SIGN UP
           </CustomButton>
         </form>
+        <NotificationContainer />
       </div>
     )
   }
