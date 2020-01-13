@@ -5,6 +5,7 @@ import { ReactComponent as Logo } from "../../assets/Brain-Light-Bulb.svg"
 import { auth } from "../../firebase/firebase.utils"
 
 export const Header = ({ currentUser }) => {
+  console.log(currentUser)
   return (
     <div className="header">
       <Link className="logo-container" to="/">
@@ -19,8 +20,16 @@ export const Header = ({ currentUser }) => {
             :
             <Link className="option" to="/signin">Sign In</Link>
         }
-
+        <div>
+          {
+            currentUser ?
+              <div className="avatar-image"
+                style={{ backgroundImage: `url(${currentUser.photoURL ? currentUser.photoURL : "https://freesvg.org/img/icon_user_whiteongrey.png"})` }} /> :
+              null
+          }
+        </div>
       </div>
+
     </div>
   )
 }
